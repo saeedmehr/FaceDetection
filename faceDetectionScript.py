@@ -1,11 +1,9 @@
 import cv2,os,argparse
-
+#argparse is a function which is the recommended command-line parsing module in the Python standard library.
 DEFAULT_OUTPUT_PATH = 'FaceCaputreImages/'
 DEFAULT_CASCADE_INPUT_PATH= 'Haarcascade_frontalface_alt.xml'
 
-
-	#argparse ye functionalitie ke vaghti run mikonim scripto ,parametraro betonim to comand line bezarim
-
+ 
 class VideoCapture:
 
 	def __init__(self): 
@@ -16,19 +14,14 @@ class VideoCapture:
 
 	def CaptureFrames(self):
 		while True:
-
-			#ye adade uniq vase har frame misazim....yani ma alan 08d ke ye int hast o be self.count dadim
+			# Then we will give a unique number to each fram 
 			frameNumber ='%08d' % (self.count)
-
-			#hala frame by frame akso migirim
-
+			#Now we will get the pictures frame by frame
 			ret, frame=self.videoSource.read()
-
-			#hala screen color o set mikonim be gray,baraye tabe haar cascade ,ta betone edge o face o tashkhis bede
-
+			#Now we are going to set the colors to gray so that Haarcascade_frontalface can easily find the edges of the face
 			screenColor= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-			#CUSTOMISE chegonegie tashkhise face tavasote cascade
+			#Customize finding the face with cascade
 			faces= self.faceCascade.detectMultiScale(
 			   screenColor,
 			   scaleFactor = 1.1,
@@ -36,33 +29,25 @@ class VideoCapture:
 			   minSize=(30,30),
 			  flags= cv2.CASCADE_SCALE_IMAGE)
 
-
-			#namayeshe frame nahaei
-
+			#Showing the final frame
 			cv2.imshow('spying on you' , screenColor)
 
-			#agar ke length faces=0 bud ,yani hich faci peyda nashode
+			# if the length of face is 0,then no face has been found
 			if len(faces)==0:
 				pass
-
-			#agar face tashkhis dad,adadi gheir az 0 o barmigardone
 			if len(faces) > 0:
 				print('Face Detected')
 
-			#face o tashkhis bede va moraba ro dore face bekesh
+			#Finding the face and then drawing a rectangle around it
 				for(x,y,w,h) in faces:
 					cv2.rectangle(frame,(x,y), (x+w , y+h), (0,255,0),2)
 
 			cv2.imwrite(DEFAULT_OUTPUT_PATH + frameNumber + '.png',frame)
-
-
-			#AFZAYESHE COUNT vase inke har frame ye uniq adad dashte bashe
-
 			self.count +=1
-			#if esc zadim ,close mishe video
 			if cv2.waitKey(1)==27:
 				break
-		#vaghti hamechi tamom shod, release the capture and close window
+		
+		#In the end , release the captured frames and close window
 		self.videoSource.release()
 		cv2.waitKey(500)
 		cv2.destroyAllWindows()
@@ -96,18 +81,12 @@ def ClearImageFolder():
 		#print "saeeeeed"
 		
 
-			
-
-
-
-
 def main():
 	ClearImageFolder()
-
-	#seda zadane class object
+	#Calling the class object
 	faceDetectImplmentation = VideoCapture()
 	 
-	#seda zadane captureframe az class
+	#Calling the captureFrame class
 	faceDetectImplmentation.CaptureFrames()
 
 
